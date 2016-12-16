@@ -27,12 +27,21 @@ var moveSnake = function(snake) {
 
 var advanceGame = function (){
   snake = moveSnake(snake);
+  if (CHUNK.detectCollisionBetween(snake, CHUNK.gameBoundaries())) {
+    CHUNK.endGame();
+    CHUNK.flashMessage("Whoops! You lose!")
+  }
   drawSnake(snake);
+}
+
+var changeDirection = function (direction) {
+  snake[0].direction = direction;
 }
 
 var snake =[{top:0, left:0, direction: "right"}]
   drawSnake(snake)
 CHUNK.executeNTimesPerSecond(advanceGame, 2);
+CHUNK.onArrowKey(changeDirection);
 
 // var snake = [{top:0, left:0}, {top:1, left:1},
 //   {top:2, left:2}, {top:2, left:3}, {top:1, left:4},
