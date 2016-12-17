@@ -34,6 +34,10 @@ var moveSnake = function(snake) {
 
 var advanceGame = function () {
   snake = moveSnake(snake);
+  if (CHUNK.detectCollisionBetween([apple], snake)) {
+    snake = growSnake(snake);
+    apple = CHUNK.randomLocation();
+  }
   if (CHUNK.detectCollisionBetween(snake, CHUNK.gameBoundaries())) {
     CHUNK.endGame();
     CHUNK.flashMessage("Whoops! You lose!")
@@ -43,6 +47,13 @@ var advanceGame = function () {
 
 var changeDirection = function (direction) {
   snake[0].direction = direction;
+}
+
+var growSnake = function(snake) {
+  var indexOfLastSegment = snake.length - 1;
+  var lastSegment = snake[indexOfLastSegment];
+  snake.push({ top: lastSegment.top, left: lastSegment.left });
+  return snake;
 }
 
 var apple = { top: 8, left: 10 };
