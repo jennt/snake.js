@@ -5,23 +5,27 @@ var drawSnake = function(snakeToDraw) {
 }
 
 var moveSegment = function(segment) {
-  if (segment.direction === "down") {
-    return { top: segment.top + 1, left: segment.left }
-  } else if (segment.direction === "up") {
-    return { top: segment.top - 1, left: segment.left }
-  } else if (segment.direction === "right") {
-    return { top: segment.top, left: segment.left + 1 }
-  } else if (segment.direction === "left") {
-    return { top: segment.top, left: segment.left - 1 }
+  switch (segment.direction) {
+    case "down":
+      return { top: segment.top + 1, left: segment.left };
+    case "up":
+      return { top: segment.top - 1, left: segment.left }
+    case "right":
+      return { top: segment.top, left: segment.left + 1 }
+    case "left":
+      return { top: segment.top, left: segment.left - 1 }
+    default:
+    return segment;
   }
-  return segment;
 }
-
 var moveSnake = function(snake) {
-  var oldSegment = snake[0];
-  var newSegment = moveSegment(oldSegment);
-  newSegment.direction = oldSegment.direction;
-  var newSnake = [newSegment];
+  var newSnake = [];
+  snake.forEach(function(oldSegment){
+    var newSegment = moveSegment(oldSegment);
+    newSegment.direction = oldSegment.direction;
+    newSnake.push(newSegment);
+  });
+
   return newSnake;
 }
 
@@ -38,8 +42,13 @@ var changeDirection = function (direction) {
   snake[0].direction = direction;
 }
 
-var snake =[{top:0, left:0, direction: "right"}]
+var snake =[{top:1, left:0, direction: "down"}, {top:0, left: 0, direction: "down"}]
   drawSnake(snake)
+  //  var snake = [{top:0, left:0}, {top:1, left:1},
+  //    {top:2, left:2}, {top:2, left:3}, {top:1, left:4},
+  //    {top:0, left:5}, {top:0, left:6}, {top:0, left:7},
+  //    {top:1, left:8}, {top:2, left:9}]
+  //  drawSnake(snake)
 CHUNK.executeNTimesPerSecond(advanceGame, 2);
 CHUNK.onArrowKey(changeDirection);
 
