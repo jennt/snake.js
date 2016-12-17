@@ -9,7 +9,7 @@ var moveSegment = function(segment) {
     case "down":
       return { top: segment.top + 1, left: segment.left };
     case "up":
-      return { top: segment.top - 1, left: segment.left }
+      return { top: segment.top - 1, left: segment.left };
     case "right":
       return { top: segment.top, left: segment.left + 1 }
     case "left":
@@ -18,18 +18,24 @@ var moveSegment = function(segment) {
     return segment;
   }
 }
-var moveSnake = function(snake) {
-  var newSnake = [];
-  snake.forEach(function(oldSegment){
-    var newSegment = moveSegment(oldSegment);
-    newSegment.direction = oldSegment.direction;
-    newSnake.push(newSegment);
-  });
 
-  return newSnake;
+var segmentFurtherForwardThan = function(index, snake) {
+  if (snake[index - 1] === undefined) {
+    return snake[index];
+  } else {
+    return snake[index - 1];
+  }
 }
 
-var advanceGame = function (){
+var moveSnake = function(snake) {
+  return snake.map(function(oldSegment, segmentIndex) {
+    var newSegment = moveSegment(oldSegment);
+    newSegment.direction = segmentFurtherForwardThan(segmentIndex, snake).direction;
+    return newSegment;
+  });
+}
+
+var advanceGame = function () {
   snake = moveSnake(snake);
   if (CHUNK.detectCollisionBetween(snake, CHUNK.gameBoundaries())) {
     CHUNK.endGame();
@@ -44,6 +50,7 @@ var changeDirection = function (direction) {
 
 var snake =[{top:1, left:0, direction: "down"}, {top:0, left: 0, direction: "down"}]
   drawSnake(snake)
+
   //  var snake = [{top:0, left:0}, {top:1, left:1},
   //    {top:2, left:2}, {top:2, left:3}, {top:1, left:4},
   //    {top:0, left:5}, {top:0, left:6}, {top:0, left:7},
@@ -51,9 +58,3 @@ var snake =[{top:1, left:0, direction: "down"}, {top:0, left: 0, direction: "dow
   //  drawSnake(snake)
 CHUNK.executeNTimesPerSecond(advanceGame, 2);
 CHUNK.onArrowKey(changeDirection);
-
-// var snake = [{top:0, left:0}, {top:1, left:1},
-//   {top:2, left:2}, {top:2, left:3}, {top:1, left:4},
-//   {top:0, left:5}, {top:0, left:6}, {top:0, left:7},
-//   {top:1, left:8}, {top:2, left:9}]
-// drawSnake(snake)
