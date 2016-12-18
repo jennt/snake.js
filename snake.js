@@ -59,7 +59,7 @@ var advanceGame = function () {
 
   if (ate(newSnake, CHUNK.gameBoundaries())) {
     CHUNK.endGame();
-    CHUNK.flashMessage("Ouch! You hit a wall!")
+    CHUNK.flashMessage("Ouch! You hit a wall!");
   }
 
   snake = newSnake;
