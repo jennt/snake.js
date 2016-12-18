@@ -48,7 +48,7 @@ var advanceGame = function () {
   var newSnake = moveSnake(snake);
 
   if (ate(newSnake, snake)) {
-    CHUNK.endgame();
+    CHUNK.endGame();
     CHUNK.flashMessage("Cannibal!!");
   }
 
