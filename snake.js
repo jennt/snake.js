@@ -32,38 +32,47 @@ var moveSnake = function(snake) {
   });
 }
 
-var advanceGame = function () {
-  snake = moveSnake(snake);
-  if (CHUNK.detectCollisionBetween([apple], snake)) {
-    snake = growSnake(snake);
-    apple = CHUNK.randomLocation();
-  }
-  if (CHUNK.detectCollisionBetween(snake, CHUNK.gameBoundaries())) {
-    CHUNK.endGame();
-    CHUNK.flashMessage("Whoops! You lose!")
-  }
-  draw(snake, apple);
-}
-
-var changeDirection = function (direction) {
-  snake[0].direction = direction;
-}
-
 var growSnake = function(snake) {
-  var indexOfLastSegment = snake.length - 1;
-  var lastSegment = snake[indexOfLastSegment];
-  snake.push({ top: lastSegment.top, left: lastSegment.left });
+  var tipOfTailIndex = snake.length - 1;
+  var tipOfTail = snake[tipOfTailIndex];
+  snake.push({ top: tipOfTail.top, left: tipOfTail.left });
   return snake;
 }
 
-var apple = { top: 8, left: 10 };
+var ate = function(snake, otherThing) {
+  var head = snake[0];
+  return CHUNK.detectCollisionBetween([head], otherThing);
+}
 
-var snake =[{top:1, left:0, direction: "down"}, {top:0, left: 0, direction: "down"}]
+var advanceGame = function () {
+  var newSnake = moveSnake(snake);
 
-  //  var snake = [{top:0, left:0}, {top:1, left:1},
-  //    {top:2, left:2}, {top:2, left:3}, {top:1, left:4},
-  //    {top:0, left:5}, {top:0, left:6}, {top:0, left:7},
-  //    {top:1, left:8}, {top:2, left:9}]
-  //  drawSnake(snake)
+  if (ate(newSnake, snake)) {
+    CHUNK.endgame();
+    CHUNK.flashMessage("Cannibal!!");
+  }
+
+  if (ate(newSnake, [apple])) {
+    newSnake = growSnake(newSnake);
+    apple = CHUNK.randomLocation();
+  }
+
+  if (ate(newSnake, CHUNK.gameBoundaries())) {
+    CHUNK.endGame();
+    CHUNK.flashMessage("Ouch! You hit a wall!")
+  }
+
+  snake = newSnake;
+  draw(snake, apple);
+}
+
+var changeDirection = function(direction) {
+  snake[0].direction = direction;
+}
+
+var apple = CHUNK.randomLocation();
+var snake =[{top:1, left:0, direction: "down"}, {top:0, left: 0,
+  direction: "down"}]
+
 CHUNK.executeNTimesPerSecond(advanceGame, 2);
 CHUNK.onArrowKey(changeDirection);
