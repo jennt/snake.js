@@ -6,7 +6,7 @@ var draw = function(snakeToDraw, apple) {
 }
 
 var moveSegment = function(segment) {
-  switch (segment.direction) {
+  switch(segment.direction) {
     case "down":
       return { top: segment.top + 1, left: segment.left };
     case "up":
@@ -44,7 +44,7 @@ var ate = function(snake, otherThing) {
   return CHUNK.detectCollisionBetween([head], otherThing);
 }
 
-var advanceGame = function () {
+var advanceGame = function() {
   var newSnake = moveSnake(snake);
 
   if (ate(newSnake, snake)) {
